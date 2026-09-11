@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>对于拨号错误651修复文件下载</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #020202;
+        }
+
+        p {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .download-btn {
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+            background-color: #d4d4d4;
+            border: none;   
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+        }
+
+        .download-btn:hover {
+            background-color: #ffffff;
+        }
+
+        .download-btn:active {
+            transform: scale(0.97);
+        }
+
+        .download-btn:disabled {
+            background-color: #93c5fd;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #6b7280;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="text-align: center;">
+        <p>本脚本和网页仓库地址：<a href="https://github.com/touchinglie/net_script_for_gdupt" target="_blank">一些给广油同学的实用脚本和建议</a>，学长大四了很忙，随缘更新吧</p>
+        <p>点击下载然后双击运行按两次是即可重新插拔网线拨号，都已经做到这样应该都会了，想学习研究的话可以看看仓库里源码</p>
+        <button id="downloadBtn" class="download-btn">下载 fix651.reg</button>
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        const FILE_URL = 'https://github-proxy.memory-echoes.cn/https://raw.githubusercontent.com/touchinglie/net_script_for_gdupt/refs/heads/main/script/fix651.reg';
+        const FILE_NAME = 'fix651.reg';
+
+        const btn = document.getElementById('downloadBtn');
+        const status = document.getElementById('status');
+
+        btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            status.textContent = '正在下载...';
+
+            try {
+                // 通过 fetch 获取文件内容
+                const response = await fetch(FILE_URL);
+
+                if (!response.ok) {
+                    throw new Error(`请求失败 (${response.status})`);
+                }
+
+                // 读取为 Blob
+                const blob = await response.blob();
+
+                // 创建临时 URL
+                const blobUrl = URL.createObjectURL(blob);
+
+                // 创建隐藏的 <a> 标签触发下载
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = FILE_NAME;
+                document.body.appendChild(a);
+                a.click();
+
+                // 清理
+                document.body.removeChild(a);
+                URL.revokeObjectURL(blobUrl);
+
+                status.textContent = '下载已开始';
+            } catch (err) {
+                console.error(err);
+                status.textContent = '下载失败：' + err.message;
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
