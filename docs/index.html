@@ -6,6 +6,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>对于拨号错误651修复文件下载</title>
     <style>
+        :root {
+            /* 白天模式配色 */
+            --bg-color: #f4f6fa;
+            --text-color: #1f2937;
+            --accent-color: #a83619;
+            --btn-bg: #1f6feb;
+            --btn-text: #ffffff;
+            --btn-hover: #1d4ed8;
+            --btn-disabled: #93c5fd;
+            --status-color: #6b7280;
+            --link-color: #1f6feb;
+            --card-shadow: rgba(31, 41, 55, 0.15);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                /* 系统为深色时的默认配色（夜间模式） */
+                --bg-color: #020202;
+                --text-color: #ffffff;
+                --accent-color: #ff7a50;
+                --btn-bg: #d4d4d4;
+                --btn-text: #000000;
+                --btn-hover: #ffffff;
+                --btn-disabled: #44474d;
+                --status-color: #9ca3af;
+                --link-color: #60a5fa;
+                --card-shadow: rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        html[data-theme="light"] {
+            --bg-color: #f4f6fa;
+            --text-color: #1f2937;
+            --accent-color: #a83619;
+            --btn-bg: #1f6feb;
+            --btn-text: #ffffff;
+            --btn-hover: #1d4ed8;
+            --btn-disabled: #93c5fd;
+            --status-color: #6b7280;
+            --link-color: #1f6feb;
+            --card-shadow: rgba(31, 41, 55, 0.15);
+        }
+
+        html[data-theme="dark"] {
+            --bg-color: #020202;
+            --text-color: #ffffff;
+            --accent-color: #ff7a50;
+            --btn-bg: #d4d4d4;
+            --btn-text: #000000;
+            --btn-hover: #ffffff;
+            --btn-disabled: #44474d;
+            --status-color: #9ca3af;
+            --link-color: #60a5fa;
+            --card-shadow: rgba(0, 0, 0, 0.5);
+        }
+
         body {
             font-family: system-ui, -apple-system, sans-serif;
             display: flex;
@@ -13,34 +69,41 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #020202;
+            background-color: var(--bg-color);
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         p {
-            color: #fff;
+            color: var(--text-color);
             font-size: 16px;
             margin-bottom: 16px;
+            transition: color 0.4s ease;
+        }
+
+        a {
+            color: var(--link-color);
+            transition: color 0.4s ease;
         }
 
         strong {
-            color: #a83619;
+            color: var(--accent-color);
         }
 
         .btn {
             padding: 14px 32px;
             font-size: 16px;
             font-weight: 600;
-            color: #000000;
-            background-color: #d4d4d4;
+            color: var(--btn-text);
+            background-color: var(--btn-bg);
             border: none;   
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+            transition: background-color 0.2s, transform 0.1s, color 0.2s;
+            box-shadow: 0 2px 6px var(--card-shadow);
         }
 
         .btn:hover {
-            background-color: #ffffff;
+            background-color: var(--btn-hover);
         }
 
         .btn:active {
@@ -48,14 +111,14 @@
         }
 
         .btn:disabled {
-            background-color: #93c5fd;
+            background-color: var(--btn-disabled);
             cursor: not-allowed;
         }
 
         .status {
             margin-top: 16px;
             font-size: 14px;
-            color: #6b7280;
+            color: var(--status-color);
             text-align: center;
         }
     </style>
@@ -75,6 +138,15 @@
     </div>
 
     <script>
+        // 根据客户端本地时间切换白天/黑夜模式
+        (function applyThemeByTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            // 6 点 - 18 点视为白天，其余为黑夜（可自行调整区间）
+            const isDay = hours >= 6 && hours < 18;
+            document.documentElement.setAttribute('data-theme', isDay ? 'light' : 'dark');
+        })();
+
         const FILE_URL = 'https://gh-proxy.com/https://raw.githubusercontent.com/touchinglie/net_script_for_gdupt/refs/heads/main/script/fix651.reg';
         const FILE_NAME = 'fix651.reg';
 
